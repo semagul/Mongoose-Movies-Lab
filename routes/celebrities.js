@@ -3,76 +3,93 @@ const router = require("express").Router();
 const Celebrity = require('../models/Celebrity')
 
 router.get('/celebrities', (req, res, next) => {
-// get all the books from the db
-    Celebrity.find()
-        .then(celebritiesFromDB => {
-        // console.log(celebritiesFromDB)
-        // render a view named 'celebrities' with all the celebrities from the db 
-    res.render('celebrities/index', { celebrityList: celebritiesFromDB })
-})
+  // get all the books from the db
+  Celebrity.find()
+    .then(celebritiesFromDb => {
+      // console.log(celebritiesFromDb)
+      // render a view named 'celebrities' with all the celebrities from the db 
+      res.render('celebrities/index', { celebrityList: celebritiesFromDb })
+    })
     .catch(err => {
-        next(err)
+      next(err)
     })
 })
 
+// ADD I
 router.get('/celebrities/new', (req, res, next) => {
-	res.render('celebrities/new') 
+  res.render('celebrities/new')
 });
 
+// DETAIL ARTIST
 router.get('/celebrities/:id', (req, res, next) => {
-	const celebrityId = req.params.id
-    Celebrity.findById(celebrityId)
-        .then(celebritiesFromDB => {
-            // console.log(celebritiesFromDB)
-            res.render('celebrities/show', { celebrityDetail: celebritiesFromDB })
+  const celebrityId = req.params.id
+  Celebrity.findById(celebrityId)
+    .then(celebrityFromDb => {
+      // console.log(celebrityFromDb)
+      res.render('celebrities/show', { celebrityDetail: celebrityFromDb })
 
-        })
-        .catch(err => {
-            next(err)
-        })
+    })
+    .catch(err => {
+      next(err)
+    })
 });
 
+// ADD II
 router.post("/celebrities", (req, res, next) => {
-    const { name, occupation, catchPhrase } = req.body;
-    Celebrity.create({
-      name: name,
-      occupation: occupation,
-      catchPhrase: catchPhrase,
-    })
-      .then(() => {
-        return Celebrity.find().then((celebritiesFromDB) => {
-          res.render("celebrities/index", { celebrityList: celebritiesFromDB });
-        });
-      })
-      .catch((err) => {
-        next(err);
-        res.render("celebrities/new");
-      });
+  const { name, occupation, catchPhrase } = req.body;
+  Celebrity.create({
+    name: name,
+    occupation: occupation,
+    catchPhrase: catchPhrase
   })
+    .then(addedCelebrity => {
+      res.redirect(`/celebrities/${addedCelebrity._id}`);
+    })
+    .catch((err) => {
+      next(err);
+      res.render("celebrities/new");
+    });
+})
 
-router.post('/celebrities/:id/delete'), (req, res, next) => {
-    const celebrityId = req.params.id
-    Celebrity.findByIdAndRemove(celebrityId)
-        .then(deletedCelebrity => {
-            console.log(deletedCelebrity)
-            // res.redirect('celebrities/index')
-        })
-      .catch(err => {
-			next(err)
-		})
-};
+// DELETE
+router.post('/celebrities/:id/delete', (req, res, next) => {
+  const celebrityId = req.params.id
+  Celebrity.findByIdAndRemove(celebrityId)
+    .then(() => {
+      res.redirect('/celebrities')
+    })
+    .catch(err => {
+      next(err)
+    })
+})
 
-// router.get('/books/delete/:id', (req, res, next) => {
-// 	const bookId = req.params.id
-// 	// delete this book in the db	
-// 	Book.findByIdAndDelete(bookId)
-// 		.then(deletedBook => {
-// 			console.log(deletedBook)
-// 			res.redirect('/books')
-// 		})
-// 		.catch(err => {
-// 			next(err)
-// 		})
-// });
+// EDIT I
+router.get('/celebrities/:id/edit', (req, res, next) => {
+  const celebrityId = req.params.id
+  Celebrity.findById(celebrityId)
+    .then(celebrityFromDb => {
+      res.render('celebrities/edit', { celebrity: celebrityFromDb })
+    })
+    .catch(err => {
+      next(err)
+    })
+})
+
+
+// EDIT II
+router.post('/celebrities/:id', (req, res, next) => {
+  const celebrityId = req.params.id
+  const { name, occupation, catchPhrase } = req.body
+  Celebrity.findByIdAndUpdate(celebrityId, {
+    name, occupation, catchPhrase
+  })
+    .then(() => {
+      res.redirect(`/celebrities/${celebrityId}`)
+    })
+    .catch(err => {
+      next(err)
+    })
+})
+
 
 module.exports = router;

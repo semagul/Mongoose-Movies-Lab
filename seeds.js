@@ -10,20 +10,20 @@ mongoose.connect(mongouri);
 const celebrities = [
     {
         name : "Anthonio Banderas",
-        occupation : "actor",
-        catchPhrase : "YOLO"
+        occupation : "Actor",
+        catchPhrase : "You only live once"
     },
 
     {
-        name : "Anthonio Saleme",
-        occupation : "liar",
-        catchPhrase : "I am the baddie"
+        name : "Madonna",
+        occupation : "Singer",
+        catchPhrase : "Sky is the limit"
     },
 
     {
-        name : "Marie Antoinette",
-        occupation : "queen",
-        catchPhrase : "If you can't bread, have some Berliner"
+        name : "Steven Spielberg",
+        occupation : "Director",
+        catchPhrase : "Directing is creating a new universe"
     },
 ];
 

@@ -1,0 +1,16 @@
+<h2>Here is the detailed information about the celebrity:</h2>
+
+{{#with movie}}
+
+    <h1>Title: {{title}}</h1>
+    <p>Genre: {{genre}}</p>
+    <p>Plot: {{plot}}</p>
+    <p>Cast :</p> 
+    
+    {{#each cast}}
+    <ul>
+        <li>{{name}}</li>
+    </ul>
+    {{/each}}
+
+{{/with}}
